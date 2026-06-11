@@ -1,9 +1,13 @@
 package com.alvaro.ciudades_api.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import java.util.List;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 
 @Data
 @Entity
@@ -46,4 +50,16 @@ public class Ciudad {
          *  cultura, atracciones turísticas, etc. No es un campo obligatorio en la base de datos. */
     @Column
     private String descripcion;
+
+    /** Relación OneToMany con la entidad Monumento. Una ciudad puede tener múltiples monumentos asociados, y esta relación
+     * se establece mediante la anotación @OneToMany en la clase Ciudad y la anotación @ManyToOne en la clase Monumento.
+     * La propiedad
+     * mappedBy indica que la relación es bidireccional y que el lado propietario de la relación es la entidad Monumento,
+     * que tiene una referencia a Ciudad. La anotación @JsonManagedReference se utiliza para evitar problemas de
+     * serialización JSON al convertir las entidades a formato JSON, especialmente cuando hay relaciones bidireccionales
+     * entre entidades.
+     */
+    @OneToMany(mappedBy = "ciudad", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Monumento> monumentos;
 }

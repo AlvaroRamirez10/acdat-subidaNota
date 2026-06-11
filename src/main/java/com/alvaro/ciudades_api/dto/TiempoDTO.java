@@ -12,12 +12,7 @@ import lombok.Data;
  * @version 1.0
  * @since 2026-06-11
  */
-public class TiempoDTO {
+public class TiempoDTO extends ClimaDTO {
     private String ciudad;
     private String pais;
-    private String descripcion;
-    private double temperatura;
-    private double sensacionTermica;
-    private int humedad;
-    private double viento;
 }

@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 /**
- * Repositorio JPA para la entidad Ciudad. Proporciona métodos CRUD y consultas personalizadas para gestionar ciudades en la base de datos.
- * Extiende JpaRepository, lo que permite utilizar métodos predefinidos para operaciones comunes como findAll, findById, save, deleteById, entre otros.
+ * Repositorio JPA para la entidad Ciudad. Proporciona métodos CRUD y consultas personalizadas para gestionar ciudades
+ * en la base de datos.
+ * Extiende JpaRepository, lo que permite utilizar métodos predefinidos para operaciones comunes como findAll, findById,
+ * save, deleteById, entre otros.
  * @author Álvaro
  * @version 1.0
  * @since 2026-06-11
