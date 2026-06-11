@@ -21,4 +21,15 @@ public class ClimaDTO {
     private double sensacionTermica;
     private int humedad;
     private double viento;
+
+    // Nuevo constructor elegante
+    public ClimaDTO(TiempoDTO tiempo) {
+        this(
+                tiempo.getDescripcion(),
+                tiempo.getTemperatura(),
+                tiempo.getSensacionTermica(),
+                tiempo.getHumedad(),
+                tiempo.getViento()
+        );
+    }
 }

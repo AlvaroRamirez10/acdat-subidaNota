@@ -3,9 +3,10 @@ package com.alvaro.ciudades_api.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
 @Entity
 @Table(name = "monumentos")
 /**
@@ -21,27 +22,45 @@ public class Monumento {
 
     /** Identificador único del monumento, generado automáticamente por la base de datos. Es la clave primaria de la tabla
      * "monumentos" y se utiliza para identificar de manera única cada registro en la base de datos.
+     * * SE TRATA DE UN CAMPO SEGURO: No tiene anotación @Setter para evitar modificaciones accidentales o maliciosas.
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /** Nombre del monumento. No puede estar vacío y es un campo obligatorio en la base de datos. */
+    @Setter
     @NotBlank(message = "El nombre no puede estar vacío")
     @Column(nullable = false)
     private String nombre;
 
-        /** Descripción opcional del monumento. Puede contener información adicional sobre el monumento, como su historia,
-        *  arquitectura, importancia cultural, etc. No es un campo obligatorio en la base de datos. */
+    /** Descripción opcional del monumento. Puede contener información adicional sobre el monumento, como su historia,
+     * arquitectura, importancia cultural, etc. No es un campo obligatorio en la base de datos. */
+    @Setter
     @Column
     private String descripcion;
 
-        /** Relación ManyToOne con la entidad Ciudad. Cada monumento pertenece a una ciudad, y esta relación se establece
-        * mediante una clave foránea "ciudad_id" en la tabla "monumentos". La anotación @JoinColumn especifica el nombre de
-        * la columna que se utilizará para la relación y establece que no puede ser nula, lo que significa que cada
-        * monumento debe estar asociado a una ciudad. */
-        @ManyToOne
-        @JoinColumn(name = "ciudad_id", nullable = false)
-        @JsonBackReference
-        private Ciudad ciudad;
+    /** Relación ManyToOne con la entidad Ciudad. Cada monumento pertenece a una ciudad... */
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "ciudad_id", nullable = false)
+    @JsonBackReference
+    private Ciudad ciudad;
+
+    /** Constructor por defecto de la clase Monumento. */
+    public Monumento() {
+    }
+
+    public Monumento(Long id, String nombre, String descripcion, Ciudad ciudad) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.ciudad = ciudad;
+    }
+
+    public Monumento(String nombre, String descripcion, Ciudad ciudad) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.ciudad = ciudad;
+    }
 }

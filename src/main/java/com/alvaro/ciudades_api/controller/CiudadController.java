@@ -2,7 +2,6 @@ package com.alvaro.ciudades_api.controller;
 
 import com.alvaro.ciudades_api.dto.ClimaDTO;
 import com.alvaro.ciudades_api.dto.CiudadConTiempoDTO;
-import com.alvaro.ciudades_api.dto.TiempoDTO;
 import com.alvaro.ciudades_api.entity.Ciudad;
 import com.alvaro.ciudades_api.service.CiudadService;
 import com.alvaro.ciudades_api.service.WeatherService;
@@ -15,43 +14,45 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/ciudades")
-
 /**
  * Controlador REST para gestionar ciudades y obtener información meteorológica.
- * Proporciona endpoints para CRUD de ciudades y para obtener el tiempo actual de una ciudad.
- * Utiliza CiudadService para operaciones de ciudad y WeatherService para obtener datos meteorológicos.
  * @author Álvaro
- * @version 1.0
+ * @version 1.1
  * @since 2026-06-11
  */
 public class CiudadController {
 
-    /** Servicio para gestionar operaciones relacionadas con la entidad Ciudad. Inyectado a través del constructor para
-     *  facilitar las pruebas unitarias y promover la inyección de dependencias. */
     private final CiudadService ciudadService;
     private final WeatherService weatherService;
 
-    /** Constructor para inyectar los servicios necesarios. Permite la creación de una instancia de CiudadController con
-     *  los servicios necesarios para gestionar ciudades y obtener información meteorológica. */
+    /** Constructor para inyectar las dependencias de CiudadService y WeatherService.
+     * @param ciudadService Servicio para gestionar operaciones relacionadas con ciudades.
+     * @param weatherService Servicio para obtener información meteorológica.
+     */
     public CiudadController(CiudadService ciudadService, WeatherService weatherService) {
         this.ciudadService = ciudadService;
         this.weatherService = weatherService;
     }
 
-    /** GET /api/ciudades — obtener todas las ciudades
-     * @return ResponseEntity con la lista de todas las ciudades. Si no hay ciudades, retorna una lista vacía.
-     * El código de estado HTTP es 200 OK en caso de éxito.
-     * */
+    /** Endpoint para obtener todas las ciudades. Utiliza el servicio de ciudades para recuperar la lista completa de ciudades
+     * almacenadas en la base de datos. Devuelve un estado 200 OK con la lista de ciudades en el cuerpo de la respuesta.
+     * Este endpoint es útil para permitir a los usuarios obtener una visión general de todas las ciudades disponibles en la aplicación,
+     * lo que puede ser útil para explorar opciones o simplemente para conocer qué ciudades están registradas.
+     * @return ResponseEntity con la lista de todas las ciudades.
+     */
     @GetMapping
     public ResponseEntity<List<Ciudad>> obtenerTodas() {
         return ResponseEntity.ok(ciudadService.obtenerTodas());
     }
 
-    /** GET /api/ciudades/{id} — obtener por ID
-     * @param id El identificador de la ciudad a obtener.
-     * @return ResponseEntity con la ciudad encontrada. Si no se encuentra la ciudad, retorna un código de estado
-     * HTTP 404 Not Found.
-     * */
+    /** Endpoint para obtener una ciudad por su ID. Utiliza el servicio de ciudades para buscar la ciudad especificada.
+     * Si se encuentra la ciudad, devuelve un estado 200 OK con la ciudad en el cuerpo de la respuesta. Si no se encuentra,
+     * devuelve un estado 404 Not Found.
+     * Este endpoint es útil para permitir a los usuarios obtener información detallada sobre una ciudad específica utilizando
+     * su ID único.
+     * @param id ID de la ciudad a buscar.
+     * @return ResponseEntity con la ciudad encontrada o un error 404 si no se encuentra.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Ciudad> obtenerPorId(@PathVariable Long id) {
         return ciudadService.obtenerPorId(id)
@@ -59,24 +60,30 @@ public class CiudadController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /** POST /api/ciudades — crear
-     * @param ciudad El objeto Ciudad a crear. Debe ser válido según las anotaciones de validación.
-     * @return ResponseEntity con la ciudad creada. El código de estado HTTP es 201 Created en caso de éxito.
-     * Si el objeto Ciudad no es válido, Spring automáticamente retornará un código de estado HTTP 400 Bad Request.
-     * */
+    /**
+     * Endpoint para crear una nueva ciudad. Recibe un objeto Ciudad en el cuerpo de la solicitud, lo valida y utiliza
+     * el servicio de ciudades para crear la ciudad en la base de datos. Si la ciudad se crea correctamente, devuelve
+     * la ciudad creada con un estado 201 Created. Si la validación falla, devuelve un error 400 Bad Request con los
+     * detalles de la validación.
+     * @param ciudad
+     * @return
+     */
     @PostMapping
     public ResponseEntity<Ciudad> crear(@Valid @RequestBody Ciudad ciudad) {
-        Ciudad nueva = ciudadService.crear(ciudad);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ciudadService.crear(ciudad));
     }
 
-        /** PUT /api/ciudades/{id} — actualizar
-        * @param id El identificador de la ciudad a actualizar.
-        * @param ciudad El objeto Ciudad con los datos actualizados. Debe ser válido según las anotaciones de validación.
-        * @return ResponseEntity con la ciudad actualizada. Si se encuentra la ciudad y se actualiza correctamente, el código de estado HTTP es 200 OK.
-        * Si no se encuentra la ciudad, retorna un código de estado HTTP 404 Not Found.
-        * Si el objeto Ciudad no es válido, Spring automáticamente retornará un código de estado HTTP 400 Bad Request.
-        * */
+    /**
+     * Endpoint para actualizar una ciudad existente. Recibe el ID de la ciudad a actualizar y un objeto Ciudad con los
+     * nuevos datos.
+     * Utiliza el servicio de ciudades para realizar la actualización. Si la ciudad se actualiza correctamente, devuelve
+     * la ciudad actualizada con un estado 200 OK. Si no se encuentra la ciudad con el ID proporcionado,
+     * devuelve un estado 404 Not Found.
+     * @param id
+     * @param ciudad
+     * @return
+     */
+
     @PutMapping("/{id}")
     public ResponseEntity<Ciudad> actualizar(@PathVariable Long id, @Valid @RequestBody Ciudad ciudad) {
         return ciudadService.actualizar(id, ciudad)
@@ -84,83 +91,63 @@ public class CiudadController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-        /** DELETE /api/ciudades/{id} — eliminar
-        * @param id El identificador de la ciudad a eliminar.
-        * @return ResponseEntity sin contenido. Si se encuentra la ciudad y se elimina correctamente, el código de estado
-         * HTTP es 204 No Content.
-        * Si no se encuentra la ciudad, retorna un código de estado HTTP 404 Not Found.
-        * */
+    /** Endpoint para eliminar una ciudad por su ID. Utiliza el servicio de ciudades para eliminar la ciudad especificada.
+     *  Si la ciudad
+     * se elimina correctamente, devuelve un estado 204 No Content. Si no se encuentra la ciudad con el ID proporcionado,
+     * devuelve un estado 404 Not Found.
+     * Este endpoint es útil para permitir a los usuarios eliminar ciudades que ya no desean mantener en la base de datos,
+     * lo que ayuda a mantener la información actualizada y relevante.
+     * @param id ID de la ciudad a eliminar.
+     * @return ResponseEntity con el estado de la operación de eliminación.
+     */
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        ResponseEntity<Void> respuesta = ciudadService.eliminar(id)
+        return ciudadService.eliminar(id)
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
-
-        return respuesta;
     }
 
-        /** GET /api/ciudades/tiempo?ciudad={nombre} — obtener tiempo por nombre de ciudad
-        * @param ciudad El nombre de la ciudad para la cual se desea obtener el tiempo.
-        * @return ResponseEntity con el DTO de tiempo si se obtiene correctamente. Si ocurre un error o la ciudad no se
-         * encuentra, retorna un código de estado HTTP 503 Service Unavailable.
-        * */
+    /**
+     * Endpoint para obtener el clima actual de una ciudad por su nombre. Utiliza el servicio de clima para obtener la información
+     * meteorológica de la ciudad especificada. Si el servicio de clima no está disponible o no se encuentra la ciudad,
+     * devuelve un error 503. Si se encuentra la ciudad y el clima, devuelve la información meteorológica en formato JSON.
+     * Este endpoint es útil para proporcionar a los usuarios información actualizada sobre el clima de una ciudad
+     * específica, lo que puede ser útil para planificar viajes, actividades al aire libre o simplemente para conocer
+     * las condiciones climáticas actuales.
+     * @param ciudad
+     * @return
+     */
     @GetMapping("/tiempo")
     public ResponseEntity<?> obtenerTiempoPorNombre(@RequestParam String ciudad) {
         return weatherService.obtenerTiempo(ciudad)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                        .build());
+                .orElse(ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build());
     }
 
-    /** GET /api/ciudades/{id}/tiempo — obtener ciudad con tiempo por ID
-     * @param id El identificador de la ciudad para la cual se desea obtener la información de la ciudad junto con el tiempo.
-     * @return ResponseEntity con la ciudad y su información meteorológica si se encuentra la ciudad.
-     * Si no se encuentra la ciudad, retorna un código de estado HTTP 404 Not Found.
-     * Si ocurre un error al obtener la información meteorológica, el campo "tiempo" será null.
-     * */
+    /**
+     * Endpoint para obtener la información de una ciudad junto con su clima actual. Utiliza el servicio de ciudades para
+     * obtener la ciudad por ID y luego el servicio de clima para obtener el clima actual de esa ciudad.
+     * La respuesta se mapea a un DTO que contiene toda la información relevante.
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}/tiempo")
     public ResponseEntity<CiudadConTiempoDTO> obtenerCiudadConTiempo(@PathVariable Long id) {
-        ResponseEntity<CiudadConTiempoDTO> respuesta = ciudadService.obtenerPorId(id)
+        return ciudadService.obtenerPorId(id)
                 .map(this::crearRespuestaCiudadConTiempo)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-
-        return respuesta;
     }
 
-    /** Método privado para crear una respuesta que contiene la ciudad y su información meteorológica.
-     * Utiliza el servicio de clima para obtener el tiempo de la ciudad y construye un DTO con la ciudad y el tiempo.
-     * Si ocurre un error al obtener la información meteorológica, el campo "tiempo" será null.
-     * @param ciudad La ciudad para la cual se desea crear la respuesta con su información meteorológica.
-     * @return Un DTO que contiene la ciudad y su información meteorológica.
-     * */
+    /**
+     * Mapea de forma limpia la ciudad y su clima utilizando los nuevos constructores del DTO.
+     */
     private CiudadConTiempoDTO crearRespuestaCiudadConTiempo(Ciudad ciudad) {
         ClimaDTO clima = weatherService.obtenerTiempo(ciudad.getNombre())
-                .map(this::crearClimaDTO)
+                .map(ClimaDTO::new) // Usa el constructor de ClimaDTO que recibe un TiempoDTO
                 .orElse(null);
 
-        CiudadConTiempoDTO respuesta = new CiudadConTiempoDTO(
-                ciudad.getId(),
-                ciudad.getNombre(),
-                ciudad.getPais(),
-                ciudad.getPoblacion(),
-                ciudad.getDescripcion(),
-                ciudad.getMonumentos(),
-                clima
-        );
-
-        return respuesta;
-    }
-
-    private ClimaDTO crearClimaDTO(TiempoDTO tiempo) {
-        ClimaDTO clima = new ClimaDTO(
-                tiempo.getDescripcion(),
-                tiempo.getTemperatura(),
-                tiempo.getSensacionTermica(),
-                tiempo.getHumedad(),
-                tiempo.getViento()
-        );
-
-        return clima;
+        return new CiudadConTiempoDTO(ciudad, clima); // Usa el constructor elegante
     }
 }

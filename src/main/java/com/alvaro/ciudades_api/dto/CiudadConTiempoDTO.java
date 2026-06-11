@@ -1,5 +1,6 @@
 package com.alvaro.ciudades_api.dto;
 
+import com.alvaro.ciudades_api.entity.Ciudad;
 import com.alvaro.ciudades_api.entity.Monumento;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,4 +26,18 @@ public class CiudadConTiempoDTO {
     private String descripcion;
     private List<Monumento> monumentos;
     private ClimaDTO tiempo;
+
+    // Nuevo constructor elegante
+    public CiudadConTiempoDTO(Ciudad ciudad, ClimaDTO clima) {
+        this(
+                ciudad.getId(),
+                ciudad.getNombre(),
+                ciudad.getPais(),
+                ciudad.getPoblacion(),
+                ciudad.getDescripcion(),
+                ciudad.getMonumentos(),
+                clima
+        );
+    }
 }
+
