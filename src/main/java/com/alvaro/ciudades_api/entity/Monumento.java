@@ -51,6 +51,9 @@ public class Monumento {
     public Monumento() {
     }
 
+    /** Constructor que acepta todos los campos de la clase Monumento, incluyendo el ID. Este constructor se utiliza
+     *  principalmente para casos en los que se necesita crear un objeto Monumento con un ID específico, como al recuperar
+     *  datos de la base de datos o al realizar pruebas. */
     public Monumento(Long id, String nombre, String descripcion, Ciudad ciudad) {
         this.id = id;
         this.nombre = nombre;
@@ -58,6 +61,9 @@ public class Monumento {
         this.ciudad = ciudad;
     }
 
+        /** Constructor que acepta todos los campos de la clase Monumento excepto el ID. Este constructor se utiliza principalmente
+        * para casos en los que se necesita crear un nuevo objeto Monumento sin un ID específico, como al crear un nuevo
+        * monumento antes de guardarlo en la base de datos, donde el ID se generará automáticamente. */
     public Monumento(String nombre, String descripcion, Ciudad ciudad) {
         this.nombre = nombre;
         this.descripcion = descripcion;

@@ -22,7 +22,10 @@ public class ClimaDTO {
     private int humedad;
     private double viento;
 
-    // Nuevo constructor elegante
+    /** Nuevo constructor elegante que acepta un objeto TiempoDTO y extrae automáticamente los campos necesarios para
+     * inicializar el ClimaDTO. Esto simplifica la creación del ClimaDTO a partir del TiempoDTO y mejora la legibilidad del código.
+     * @param tiempo El objeto TiempoDTO del cual se extraerán los datos para inicializar el ClimaDTO.
+     */
     public ClimaDTO(TiempoDTO tiempo) {
         this(
                 tiempo.getDescripcion(),

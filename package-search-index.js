@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.alvaro.ciudades_api"},{"l":"com.alvaro.ciudades_api.controller"},{"l":"com.alvaro.ciudades_api.dto"},{"l":"com.alvaro.ciudades_api.entity"},{"l":"com.alvaro.ciudades_api.repository"},{"l":"com.alvaro.ciudades_api.service"}];updateSearchResults();

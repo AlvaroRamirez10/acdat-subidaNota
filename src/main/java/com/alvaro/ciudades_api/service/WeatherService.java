@@ -96,6 +96,8 @@ public class WeatherService {
         List weather = (List) respuesta.get("weather");
         Map weatherInfo = (Map) weather.get(0);
 
+        //Construye el DTO de tiempo utilizando los datos extraídos de la respuesta de la API. Asigna el nombre de la ciudad,
+        // el país, la descripción del clima, la temperatura,
         TiempoDTO dto = new TiempoDTO();
         dto.setCiudad(nombreCiudad);
         dto.setPais((String) sys.get("country"));

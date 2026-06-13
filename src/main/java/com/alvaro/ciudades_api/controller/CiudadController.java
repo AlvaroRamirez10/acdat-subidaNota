@@ -66,7 +66,7 @@ public class CiudadController {
      * la ciudad creada con un estado 201 Created. Si la validación falla, devuelve un error 400 Bad Request con los
      * detalles de la validación.
      * @param ciudad
-     * @return
+     * @return ResponseEntity con la ciudad creada o un error 400 si la validación falla.
      */
     @PostMapping
     public ResponseEntity<Ciudad> crear(@Valid @RequestBody Ciudad ciudad) {
@@ -81,7 +81,7 @@ public class CiudadController {
      * devuelve un estado 404 Not Found.
      * @param id
      * @param ciudad
-     * @return
+     * @return ResponseEntity con la ciudad actualizada o un error 404 si no se encuentra la ciudad con el ID proporcionado.
      */
 
     @PutMapping("/{id}")
@@ -116,7 +116,7 @@ public class CiudadController {
      * específica, lo que puede ser útil para planificar viajes, actividades al aire libre o simplemente para conocer
      * las condiciones climáticas actuales.
      * @param ciudad
-     * @return
+     * @return ResponseEntity con la información meteorológica de la ciudad o un error 503 si el servicio no está disponible.
      */
     @GetMapping("/tiempo")
     public ResponseEntity<?> obtenerTiempoPorNombre(@RequestParam String ciudad) {
@@ -130,7 +130,7 @@ public class CiudadController {
      * obtener la ciudad por ID y luego el servicio de clima para obtener el clima actual de esa ciudad.
      * La respuesta se mapea a un DTO que contiene toda la información relevante.
      * @param id
-     * @return
+     * @return ResponseEntity con la información de la ciudad y su clima actual, o un error 404 si no se encuentra la ciudad.
      */
     @GetMapping("/{id}/tiempo")
     public ResponseEntity<CiudadConTiempoDTO> obtenerCiudadConTiempo(@PathVariable Long id) {
@@ -142,6 +142,12 @@ public class CiudadController {
 
     /**
      * Mapea de forma limpia la ciudad y su clima utilizando los nuevos constructores del DTO.
+     * Este método se encarga de crear una instancia de CiudadConTiempoDTO a partir de una entidad Ciudad, obteniendo
+     * el clima
+     * actual de la ciudad utilizando el servicio de clima. Si el clima no está disponible, se asigna null al campo de
+     * clima en el DTO.
+     * @param ciudad Entidad Ciudad de la cual se desea crear el DTO con clima.
+     * @return CiudadConTiempoDTO que contiene la información de la ciudad y su clima actual (o null si no está disponible
      */
     private CiudadConTiempoDTO crearRespuestaCiudadConTiempo(Ciudad ciudad) {
         ClimaDTO clima = weatherService.obtenerTiempo(ciudad.getNombre())

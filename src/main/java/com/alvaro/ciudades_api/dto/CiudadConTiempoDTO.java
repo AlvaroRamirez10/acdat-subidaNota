@@ -27,7 +27,12 @@ public class CiudadConTiempoDTO {
     private List<Monumento> monumentos;
     private ClimaDTO tiempo;
 
-    // Nuevo constructor elegante
+    /** Nuevo constructor elegante que acepta una entidad Ciudad y un ClimaDTO, y extrae automáticamente los campos necesarios
+     * de la entidad para inicializar el DTO. Esto simplifica la creación del DTO a partir de la entidad y mejora la
+     * legibilidad del código.
+     * @param ciudad La entidad Ciudad de la cual se extraerán los datos para inicializar el DTO.
+     * @param clima El objeto ClimaDTO que representa el clima actual de la ciudad.
+     */
     public CiudadConTiempoDTO(Ciudad ciudad, ClimaDTO clima) {
         this(
                 ciudad.getId(),

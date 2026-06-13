@@ -61,9 +61,11 @@ public class Ciudad {
     @JsonManagedReference
     private List<Monumento> monumentos;
 
+    /** Constructor por defecto de la clase Ciudad. */
     public Ciudad() {
     }
 
+    /** Constructor que acepta los campos necesarios para crear una ciudad sin el ID, que se generará automáticamente. */
     public Ciudad(String nombre, String pais, List<Monumento> monumentos, String descripcion, Integer poblacion) {
         this.nombre = nombre;
         this.pais = pais;
@@ -72,6 +74,8 @@ public class Ciudad {
         this.poblacion = poblacion;
     }
 
+    /** Constructor completo que acepta todos los campos, incluido el ID. Este constructor se puede utilizar para crear una ciudad
+     * con un ID específico, aunque generalmente el ID se genera automáticamente por la base de datos. */
     public Ciudad(Long id, String nombre, String pais, Integer poblacion, String descripcion,
                   List<Monumento> monumentos) {
         this.id = id;
